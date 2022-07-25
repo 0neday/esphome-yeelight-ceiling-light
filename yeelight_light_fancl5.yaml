@@ -100,7 +100,7 @@ esp32_ble_tracker:
     active: false
 
 xiaomi_ylyk01yl:
-  # change mac_address here
+# change mac_address here
   mac_address: "A4:C1:38:6E:85:0B"
   last_button_pressed:
     name: "last button pressed"
@@ -123,23 +123,25 @@ xiaomi_ylyk01yl:
       then:
         - light.toggle: ceiling_light
 
-    # three speed level control: 1 level = 1%(0x01), 2 level =50%(0x32), 3 level = 100%(0x64)
+    # 1 level = 1%(0x01), 2 level =50%(0x32), 3 level = 100%(0x64)
     - keycode: 2
       then:
         - fan.turn_on:
             id: yeelight_ceiling_fan
             speed: !lambda |-
-              float speed = id(fan_speed_loop_flag) * 50.0f;
+              float speed;
+              speed = id(fan_speed_loop_flag) * 50;
               id(fan_speed_loop_flag) += 1;
-              if(id(fan_speed_loop_flag) > 2)
+              if(id(fan_speed_loop_flag) > 2){
                 id(fan_speed_loop_flag) = 0;
-              if(speed <= 100 && speed > 1)
-                return speed;
+              }
+              if( speed <= 100 && speed > 1)
+                  return speed;
               else
-                return 1;
+                  return 1;
 
     # brightness and color_temperature control (value: 0.01-1f)
-    # color_temperature only support ceiling light，using step_size to userdefined update
+    # color_temperature only support ceiling light
     # ceiling light and night light brightness minus
     - keycode: 3
       then:
@@ -150,11 +152,13 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: ceiling_light
                   brightness: !lambda |-
-                    float brightness = id(ceiling_light).remote_values.get_brightness() - id(step_size);
-                    if(brightness > 0.05f)
-                      return brightness;
+                    float brightness;
+                    brightness = id(ceiling_light).remote_values \
+                    .get_brightness() - id(step_size);
+                    if( brightness > 0.05f )
+                        return brightness;
                     else
-                      return 0.05f;
+                        return 0.05f;
         - if:
             condition:
               light.is_on: night_light
@@ -162,11 +166,13 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: night_light
                   brightness: !lambda |-
-                    float brightness = id(night_light).remote_values.get_brightness() - id(step_size);
-                    if(brightness > 0.05f)
-                      return brightness;
+                    float brightness;
+                    brightness = id(night_light).remote_values \
+                    .get_brightness() - id(step_size);
+                    if( brightness > 0.05f )
+                        return brightness;
                     else
-                      return 0.05f;
+                        return 0.05f;
 
     # fan mode FORWARD select for standord winds
     - keycode: 4
@@ -185,12 +191,13 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: ceiling_light
                   brightness: !lambda |-
-                    float brightness = id(ceiling_light).remote_values.get_brightness() + id(step_size);
-                    if(brightness < 1.0f)
-                      return brightness;
+                    float brightness;
+                    brightness = id(ceiling_light).remote_values \
+                    .get_brightness() + id(step_size);
+                    if( brightness < 1.0f )
+                        return brightness;
                     else
-                      return 1.0f;
-
+                        return 1.0f;
         - if:
             condition:
               light.is_on: night_light
@@ -198,11 +205,13 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: night_light
                   brightness: !lambda |-
-                    float brightness = id(night_light).remote_values.get_brightness() + id(step_size);
-                    if(brightness < 1.0f)
-                      return brightness;
+                    float brightness;
+                    brightness = id(night_light).remote_values \
+                    .get_brightness() + id(step_size);
+                    if( brightness < 1.0f )
+                        return brightness;
                     else
-                      return 1.0f;
+                        return 1.0f;
 
     # Trigger on any keycode
     - then:
@@ -241,7 +250,9 @@ xiaomi_ylyk01yl:
                   id: ceiling_light
                   color_mode: COLD_WARM_WHITE
                   color_temperature: !lambda |-
-                    float color_temperature = id(ceiling_light).remote_values.get_color_temperature() * (1 + id(step_size));
+                    float color_temperature;
+                    color_temperature = id(ceiling_light).remote_values \
+                    .get_color_temperature() * (1 + id(step_size));
                     if(color_temperature < 370.0f)
                       return color_temperature;
                     else
@@ -257,11 +268,13 @@ xiaomi_ylyk01yl:
                   id: ceiling_light
                   color_mode: COLD_WARM_WHITE
                   color_temperature: !lambda |-
-                    float color_temperature = id(ceiling_light).remote_values.get_color_temperature() * (1 - id(step_size));
+                    float color_temperature;
+                    color_temperature = id(ceiling_light).remote_values \
+                    .get_color_temperature() * (1 - id(step_size));
                     if(color_temperature > 154.0f)
-                      return color_temperature;
+                       return color_temperature;
                     else
-                      return 154;
+                       return 154;
 
     - then:
         - switch.turn_on: buzzer_beep
