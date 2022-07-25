@@ -129,8 +129,7 @@ xiaomi_ylyk01yl:
         - fan.turn_on:
             id: yeelight_ceiling_fan
             speed: !lambda |-
-              float speed;
-              speed = id(fan_speed_loop_flag) * 50;
+              float speed = id(fan_speed_loop_flag) * 50;
               id(fan_speed_loop_flag) += 1;
               if(id(fan_speed_loop_flag) > 2){
                 id(fan_speed_loop_flag) = 0;
@@ -152,8 +151,7 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: ceiling_light
                   brightness: !lambda |-
-                    float brightness;
-                    brightness = id(ceiling_light).remote_values \
+                    float brightness = id(ceiling_light).remote_values \
                     .get_brightness() - id(step_size);
                     if( brightness > 0.05f )
                         return brightness;
@@ -166,8 +164,7 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: night_light
                   brightness: !lambda |-
-                    float brightness;
-                    brightness = id(night_light).remote_values \
+                    float brightness = id(night_light).remote_values \
                     .get_brightness() - id(step_size);
                     if( brightness > 0.05f )
                         return brightness;
@@ -191,8 +188,7 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: ceiling_light
                   brightness: !lambda |-
-                    float brightness;
-                    brightness = id(ceiling_light).remote_values \
+                    float brightness = id(ceiling_light).remote_values \
                     .get_brightness() + id(step_size);
                     if( brightness < 1.0f )
                         return brightness;
@@ -205,8 +201,7 @@ xiaomi_ylyk01yl:
               - light.turn_on:
                   id: night_light
                   brightness: !lambda |-
-                    float brightness;
-                    brightness = id(night_light).remote_values \
+                    float brightness = id(night_light).remote_values \
                     .get_brightness() + id(step_size);
                     if( brightness < 1.0f )
                         return brightness;
@@ -250,8 +245,7 @@ xiaomi_ylyk01yl:
                   id: ceiling_light
                   color_mode: COLD_WARM_WHITE
                   color_temperature: !lambda |-
-                    float color_temperature;
-                    color_temperature = id(ceiling_light).remote_values \
+                    float color_temperature = id(ceiling_light).remote_values \
                     .get_color_temperature() * (1 + id(step_size));
                     if(color_temperature < 370.0f)
                       return color_temperature;
@@ -268,8 +262,7 @@ xiaomi_ylyk01yl:
                   id: ceiling_light
                   color_mode: COLD_WARM_WHITE
                   color_temperature: !lambda |-
-                    float color_temperature;
-                    color_temperature = id(ceiling_light).remote_values \
+                    float color_temperature = id(ceiling_light).remote_values \
                     .get_color_temperature() * (1 - id(step_size));
                     if(color_temperature > 154.0f)
                        return color_temperature;
